@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth/main.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="static/css/home/homepage_paint.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <title>ArgonVault</title>
+</head>
+<body>
+    <section id="section-login" class="main-section">
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="static/images/main_images/cadeado.jpeg" alt="cadeado">
+            </div>
+        </nav>
+    </header>
+    <main class="main-content">
+        <div class="container">
+            <div class="form-login">
+                <form class="login" method="POST">
+                    {{login_form.hidden_tag()}}
+                    <div class="form-header">
+                        <div class="title">
+                            <h1>Login</h1>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-box">
+                            {{login_form.usuario.label}} {{login_form.usuario(placeholder="Digite seu usuario")}}
+                            {% for error in login_form.usuario.errors %}
+                                <b>{{error}}</b>
+                            {% endfor %}
+                        </div>
+                        <div class="input-box">
+                            {{login_form.password.label}} {{login_form.password(placeholder="Digite sua senha")}} <br>
+                            {% for error in login_form.password.errors %}
+                                <b>{{error}}</b>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="continue-button">
+                        {{login_form.submit()}}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    </section>
+
+    <section id="section-passwords" class="passwords">
+        <header>
+        <nav class="navbar">
+            <img src="static/images/main_images/cadeado.jpeg" alt="cadeado" class="logo">
+            <ul id="nav-links">
+                <li>
+                <button class="btn-add">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+                </li>
+                <li>
+                    <a class="logout" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="passwords-container">
+            {% for senhas in content %}
+            <div class="password-card">
+                <center>
+                    <table>
+                        <div class="card-header">
+                            <h2>
+                                <span class="label"> Serviço: </span>
+                                <h3 class="service-name">{{senhas.service}}</h3>
+                            </h2>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="info-group">
+                                <br><span class="label">Usuário:</span>
+                                <p class="user-display">{{senhas.user_log}}</p>
+                            </div>
+
+                            <div class="info-group">
+                                <br><span class="label">Senha:</span>
+                                <div class="password-wrapper">
+                                    <p class="asteriscos">*************************</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="actions">
+                                <tr class="botoes">
+                                    <td>
+                                        <button data-password="{{ senhas.encrypted_content }}" data-iv="{{ senhas.iv_content }}" class="btns btn-eye" type="button">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button hidden class="btns-slash btn-eye-slash" type="button">
+                                            <i class="bi bi-eye-slash"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <form class="lixo" method="POST">
+                                            {{delete_form.id_senha(value=senhas.id)}}
+                                            {{delete_form.hidden_tag()}}
+                                            <button hidden class="lixeira btn" type="submit">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </div>
+                        </div>
+                    </table>
+                </center>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+    </section>
+
+    <section id="section-add" class="add_passwords">
+        <body>
+    <main class="main-content">
+        <div class="container">
+            <div class="form">
+                <form class="passwords" method="POST">
+                    {{add_form.hidden_tag()}}
+                    <div class="form-header">
+                        <div class="title">
+                            <h1>Adicione uma senha:</h1>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-box">
+                            {{add_form.service.label}} {{add_form.service(placeholder="Digite o serviço desejado")}}
+                            {% for error in add_form.service.errors %}
+                                <b>{{error}}</b>
+                            {% endfor %}
+                        </div>
+                        <div class="input-box">
+                            {{add_form.usuario_service.label}} {{add_form.usuario_service(placeholder="Digite seu usuario")}}
+                            {% for error in add_form.usuario_service.errors %}
+                                <b>{{error}}</b>
+                            {% endfor %}
+                        </div>
+                        <div class="input-box">
+                            {{add_form.password_service.label}} {{add_form.password_service(placeholder="Digite sua senha")}} <br>
+                            {% for error in add_form.password_service.errors %}
+                                <b>{{error}}</b>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="continue-button">
+                        {{add_form.submit()}}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    </section>
+</body>
+</html>
+<script src="{{ url_for('static', filename='js/mvc/view/view_login.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mvc/controller/controller_login.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mvc/view/view_passwords.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mvc/controller/controller_passwords.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mvc/model/crypto.js') }}"></script>

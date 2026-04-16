@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth/register_paint.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <title>Register</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="static/images/register_images/cadeado.jpeg" alt="cadeado">
+            </div>
+        </nav>
+    </header>
+    <main class="main-content">
+        <div class="container">
+            <div class="form">
+                <form class="register" method="POST">
+                    {{form.hidden_tag()}}
+                    <div class="form-header">
+                        <div class="title">
+                            <h1>Cadastre-se</h1>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-box">
+                            {{form.user.label}} {{form.user(placeholder="Digite seu usuario")}} <br>
+                            {% for error in form.user.errors %}
+                                <b>{{error}}</b>
+                            {% endfor %}
+                        </div>
+                        <div class="input-box">
+                            {{form.password.label}} {{form.password(placeholder="Digite sua senha")}} <br>
+                            {% for error in form.password.errors %}
+                                <b>{{error}}</b>
+                            {% endfor %}
+                        </div>
+                        <div class="input-box">
+                            {{form.confirm_password.label}} {{form.confirm_password(placeholder="Confirme sua senha")}} <br>
+                        </div>
+                    </div>
+                    <div class="continue-button">
+                        {{form.submit()}}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+<script type="module" src="{{ url_for('static', filename='js/mvc/view/view_register.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/mvc/controller/controller_register.js') }}"></script>

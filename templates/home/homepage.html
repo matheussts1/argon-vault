@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/homepage_paint.css') }}">
+    <title>ArgonVault | Home</title>
+</head>
+<body>
+    <div id="container">
+        <header>
+            <nav class="navbar">
+                <img src="static/images/home_images/cadeado.jpeg" alt="Logo ArgonVault" class="logo">
+                
+                <ul id="nav-links">
+                    <ul id="nav-links">
+                        <li><a href="/register" class="registro">Register |</a></li>
+                        <li><a href="/argonvault">Login</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main id="home">
+            <img src="static/images/home_images/chaves.jpg" alt="Cadeado" class="home-image">
+            
+            <h1 class="home-title">
+                Segurança Máxima para suas <span>Senhas</span>
+            </h1>
+
+            <p class="home-description">
+                Proteja seus dados com criptografia de ponta e arquitetura zero-knowledge. 
+                O ArgonVault garante que apenas você tenha acesso ao que é importante.
+            </p>
+        </main>
+    </div>
+</body>
+</html>
