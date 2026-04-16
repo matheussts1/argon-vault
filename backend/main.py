@@ -7,7 +7,6 @@ sys.path.append(BASE_DIR)
 from flask import Flask
 from extensions import db, lm, limiter 
 from routes import main_bp 
-from models import Users, Secrets
 
 app = Flask(__name__, 
             template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')),
@@ -41,12 +40,6 @@ from .routes import *
 
 with app.app_context():
     db.create_all()
-    user_delete = db.session.get(Users, 2)
-    senha_delete = db.session.get(Secrets, 1)
-
-    db.session.delete(user_delete)
-    db.session.delete(senha_delete)
-    db.session.commit()
 
 if __name__ == "__main__":
     app.run()
