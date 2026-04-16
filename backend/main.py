@@ -32,8 +32,8 @@ lm.login_view = 'auth_login'
 
 from .routes import *
 
-#with app.app_context():
-    #db.create_all()
+with app.app_context():
+    db.create_all()
 
 if __name__ == "__main__":
     app.run()
