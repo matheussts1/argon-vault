@@ -43,7 +43,7 @@ def web_site():
                            content=senhas_usuario)
 
 @main_bp.route("/register", methods=["GET", "POST"])
-@limiter.limit("5 per hour")
+#@limiter.limit("5 per hour")
 def create_login():
     form = RegisterForm()
 

@@ -27,7 +27,7 @@ document.querySelector("form.register").addEventListener('register', (r) => {
         .then(response => response.json())
         .then(data => {
             if (data === "Sucesso") {
-                window.location.href = "https://127.0.0.1:5000/argonvault"
+                window.location.href = "https://argon-vault.onrender.com/argonvault"
             } else {
                 alert ("Erro no cadastro")
             }
