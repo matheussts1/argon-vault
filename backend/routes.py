@@ -1,7 +1,7 @@
 import base64
 import models
 
-from flask import Blueprint, request, render_template, jsonify, redirect, url_for, current_app
+from flask import Blueprint, request, render_template, jsonify, redirect, url_for
 from extensions import db, ph, limiter, csp, lm
 from flask_login import current_user, login_user, logout_user, login_required
 from form_validation import RegisterForm, LoginForm, PasswordsForm, DeleteForm
