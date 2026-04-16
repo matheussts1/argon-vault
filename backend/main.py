@@ -1,8 +1,5 @@
 import os
 import sys
-import logging
-logging.basicConfig(level=logging.DEBUG)
-print("ALÔ RENDER, ESTOU RODANDO!")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
