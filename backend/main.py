@@ -1,8 +1,8 @@
 import os
 
 from flask import Flask
-from .extensions import db, lm, limiter 
-from .routes import main_bp 
+from extensions import db, lm, limiter 
+from routes import main_bp 
 
 app = Flask(__name__,
             template_folder='../templates',
