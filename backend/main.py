@@ -3,7 +3,8 @@ import sys
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
-print(">>> TENTANDO INICIAR O FLASK NO RENDER")
+print("DEBUG: O Gunicorn me achou!", file=sys.stderr)
+print(f"DEBUG: PATH atual: {sys.path}", file=sys.stderr)
 from flask import Flask
 from extensions import db, lm, limiter 
 from routes import main_bp 
