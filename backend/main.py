@@ -1,5 +1,8 @@
 import os
 import sys
+import logging
+logging.basicConfig(level=logging.DEBUG)
+print("ALÔ RENDER, ESTOU RODANDO!")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
@@ -8,9 +11,9 @@ from flask import Flask
 from extensions import db, lm, limiter 
 from routes import main_bp 
 
-app = Flask(__name__,
-            template_folder='../templates',
-            static_folder='../static')
+app = Flask(__name__, 
+            template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')),
+            static_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static')))
 
 
 bdbase = os.path.abspath(os.path.dirname(__file__))
