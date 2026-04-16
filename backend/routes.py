@@ -1,7 +1,7 @@
-import models
 import base64
 
-from main import app, limiter, db, lm, ph, csp
+from . import models
+from .main import app, limiter, db, lm, ph, csp
 from flask import request, render_template, jsonify, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 from form_validation import RegisterForm, LoginForm, PasswordsForm, DeleteForm
