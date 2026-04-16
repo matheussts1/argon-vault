@@ -15,7 +15,11 @@ app = Flask(__name__,
 
 
 bdbase = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(bdbase, 'instance', 'user.db')
+instance_path = os.path.join(bdbase, 'instance')
+if not os.path.exists(instance_path):
+    os.makedirs(instance_path)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'user.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
