@@ -16,7 +16,7 @@ app.register_blueprint(main_bp)
 
 bdbase = os.path.abspath(os.path.dirname(__file__))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(bdbase, 'instance', 'user.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
@@ -32,8 +32,8 @@ lm.login_view = 'auth_login'
 
 from .routes import *
 
-with app.app_context():
-    db.create_all()
+#with app.app_context():
+    #db.create_all()
 
 if __name__ == "__main__":
     app.run()
