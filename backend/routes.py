@@ -111,6 +111,10 @@ def auth_login():
         form = LoginForm(data=dados)
 
         user = models.Users.query.filter_by(user=form.usuario.data).first()
+
+        if not user:
+            return jsonify("Usuario não existe"), 404
+
         senha_banco = user.password
 
         hash = dados.get('hash').strip()

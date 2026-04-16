@@ -28,7 +28,7 @@ app.config.update(
 )
 
 lm.init_app(app)
-lm.login_view = 'auth_login'
+lm.login_view = 'main.auth_login'
 
 from .routes import *
 
