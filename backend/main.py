@@ -3,7 +3,7 @@ import sys
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
-
+print(">>> TENTANDO INICIAR O FLASK NO RENDER")
 from flask import Flask
 from extensions import db, lm, limiter 
 from routes import main_bp 
