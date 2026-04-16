@@ -1,14 +1,16 @@
 import base64
 
+from flask import Blueprint, request, render_template, jsonify, redirect, url_for, current_app
+from .extensions import db, ph, limiter, csp, lm
 from . import models
-from .main import app, limiter, db, lm, ph, csp
-from flask import request, render_template, jsonify, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
-from form_validation import RegisterForm, LoginForm, PasswordsForm, DeleteForm
+from .form_validation import RegisterForm, LoginForm, PasswordsForm, DeleteForm
 from sqlalchemy.exc import IntegrityError
 from argon2.exceptions import VerifyMismatchError
 
-@app.after_request
+main_bp = Blueprint('main', __name__)
+
+@current_app.after_request
 def add_security_headers(response):
     response.headers['Content-Security-Policy'] = csp
     response.headers['X-Frame-Options'] = 'DENY'
@@ -19,11 +21,11 @@ def add_security_headers(response):
 def load_user(user_id):
     return models.Users.query.get(int(user_id))
 
-@app.route("/", methods=["GET"])
+@main_bp.route("/", methods=["GET"])
 def home_page():
     return render_template("home/homepage.html")
 
-@app.route("/argonvault", methods=["GET", "POST"])
+@current_app.route("/argonvault", methods=["GET", "POST"])
 def web_site():
     form_login = LoginForm()
     form_passwords = PasswordsForm()
@@ -40,7 +42,7 @@ def web_site():
                            delete_form=form_delete,
                            content=senhas_usuario)
 
-@app.route("/register", methods=["GET", "POST"])
+@current_app.route("/register", methods=["GET", "POST"])
 @limiter.limit("5 per hour")
 def create_login():
     form = RegisterForm()
@@ -78,7 +80,7 @@ def create_login():
             
     return render_template("main/register.html", form=form)
 
-@app.route('/get-salt-login', methods=['GET'])
+@current_app.route('/get-salt-login', methods=['GET'])
 def get_salt():
     username = request.args.get('username')
     user = models.Users.query.filter_by(user=username).first()
@@ -88,7 +90,7 @@ def get_salt():
     else:
         return jsonify({"salt": "88a025044d4135a8c12603a447d832e4"}), 400
     
-@app.route('/get-salt-crypto', methods=['GET'])
+@current_app.route('/get-salt-crypto', methods=['GET'])
 def get_salt_crypto():
     usuario = request.args.get('usuario')
     user = models.Users.query.filter_by(user=usuario).first()
@@ -98,7 +100,7 @@ def get_salt_crypto():
     else:
         return jsonify({"salt": "df2ae307fff614da5649ff5ced16642f"}), 400
 
-@app.route("/login", methods=["GET", "POST"])
+@current_app.route("/login", methods=["GET", "POST"])
 @limiter.limit("5 per hour")
 def auth_login():
     form = LoginForm()
@@ -127,7 +129,7 @@ def auth_login():
     
     return jsonify("Não entrou em nenhum if")
 
-@app.route("/passwords", methods=["GET", "POST"])
+@current_app.route("/passwords", methods=["GET", "POST"])
 @login_required
 def passwords():
     form = PasswordsForm()
@@ -166,7 +168,7 @@ def passwords():
     
     return jsonify("Não entrou em nada")
 
-@app.route("/delete", methods=["POST"])
+@current_app.route("/delete", methods=["POST"])
 @login_required
 def deletar():
     form = DeleteForm()
@@ -195,7 +197,7 @@ def deletar():
 
     return jsonify("Não entrou em nenhum if")
 
-@app.route("/logout")
+@current_app.route("/logout")
 @login_required
 def logout():
     logout_user()
