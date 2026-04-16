@@ -12,8 +12,6 @@ db.init_app(app)
 lm.init_app(app)
 limiter.init_app(app)
 
-app.register_blueprint(main_bp)
-
 bdbase = os.path.abspath(os.path.dirname(__file__))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(bdbase, 'instance', 'user.db')
@@ -31,6 +29,8 @@ lm.init_app(app)
 lm.login_view = 'main.auth_login'
 
 from .routes import *
+
+app.register_blueprint(main_bp)
 
 with app.app_context():
     db.create_all()
