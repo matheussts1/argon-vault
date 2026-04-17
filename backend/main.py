@@ -18,7 +18,7 @@ app = Flask(__name__,
 database_url = os.getenv('DATABASE_URL')
 
 if database_url:
-    print("EXISTE O DATABASE ")
+    print("EXISTE O DATABASE")
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
@@ -32,6 +32,18 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'user.db')
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+try:
+    db.init_app(app)
+    print("DEBUG: db.init_app executado", file=sys.stderr)
+    
+    with app.app_context():
+        db.create_all()
+        print("DEBUG: Tabelas criadas/verificadas", file=sys.stderr)
+except Exception as e:
+    print(f"ERRO FATAL NO BANCO: {e}", file=sys.stderr)
+    import traceback
+    traceback.print_exc()
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
@@ -49,9 +61,6 @@ lm.login_view = 'main.auth_login'
 app.register_blueprint(main_bp)
 
 from .routes import *
-
-with app.app_context():
-    db.create_all()
 
 if __name__ == "__main__":
     app.run()
