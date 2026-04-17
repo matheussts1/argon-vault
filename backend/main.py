@@ -1,6 +1,9 @@
 import os
 import sys
 
+print("DEBUG: Iniciando boot do servidor...", file=sys.stderr)
+print(f"DEBUG: DATABASE_URL existe? {'Sim' if os.getenv('DATABASE_URL') else 'Não'}", file=sys.stderr)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
 
