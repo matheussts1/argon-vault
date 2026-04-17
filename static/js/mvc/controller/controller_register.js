@@ -29,10 +29,7 @@ document.querySelector("form.register").addEventListener('register', (r) => {
             if (data === "Sucesso") {
                 window.location.href = "https://argon-vault.onrender.com/argonvault"
             } else {
-                alert ("Erro no cadastro")
-            }
-            if (data === "Usuário já existe") {
-                alert ("Usuário já existe")
+                alert ("Usuario ja existe ou houve um erro no cadastro. Tente novamente com outro nome de usuário.")
             }
         })
         .catch(error => {
