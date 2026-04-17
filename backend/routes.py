@@ -74,7 +74,7 @@ def create_login():
         
             except IntegrityError:
                 db.session.rollback()
-                return jsonify(message="Usuario ja existe"), 400
+                return jsonify(message="Usuário ja existe"), 400
         else:
             return jsonify(errors=form.errors), 400
             

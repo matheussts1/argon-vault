@@ -31,6 +31,9 @@ document.querySelector("form.register").addEventListener('register', (r) => {
             } else {
                 alert ("Erro no cadastro")
             }
+            if (data === "Usuário já existe") {
+                alert ("Usuário já existe")
+            }
         })
         .catch(error => {
             console.log("erro: ", error);
