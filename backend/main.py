@@ -6,7 +6,6 @@ sys.path.append(BASE_DIR)
 
 from flask import Flask
 from extensions import db, lm, limiter 
-from routes import main_bp 
 
 app = Flask(__name__, 
             template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')),
@@ -29,6 +28,8 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'user.db')
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+from routes import main_bp 
 
 try:
     db.init_app(app)
