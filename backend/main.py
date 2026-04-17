@@ -1,9 +1,6 @@
 import os
 import sys
 
-print("DEBUG: Iniciando boot do servidor...", file=sys.stderr)
-print(f"DEBUG: DATABASE_URL existe? {'Sim' if os.getenv('DATABASE_URL') else 'Não'}", file=sys.stderr)
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
 
@@ -18,7 +15,6 @@ app = Flask(__name__,
 database_url = os.getenv('DATABASE_URL')
 
 if database_url:
-    print("EXISTE O DATABASE")
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
@@ -35,13 +31,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 try:
     db.init_app(app)
-    print("DEBUG: db.init_app executado", file=sys.stderr)
     
     with app.app_context():
         db.create_all()
-        print("DEBUG: Tabelas criadas/verificadas", file=sys.stderr)
 except Exception as e:
-    print(f"ERRO FATAL NO BANCO: {e}", file=sys.stderr)
     import traceback
     traceback.print_exc()
 
