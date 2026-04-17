@@ -12,13 +12,21 @@ app = Flask(__name__,
             template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')),
             static_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static')))
 
+database_url = os.getenv('DATABASE_URL')
 
-bdbase = os.path.abspath(os.path.dirname(__file__))
-instance_path = os.path.join(bdbase, 'instance')
-if not os.path.exists(instance_path):
-    os.makedirs(instance_path)
+if database_url:
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'user.db')
+else:
+    bdbase = os.path.abspath(os.path.dirname(__file__))
+    instance_path = os.path.join(bdbase, 'instance')
+    if not os.path.exists(instance_path):
+        os.makedirs(instance_path)
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'user.db')
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
