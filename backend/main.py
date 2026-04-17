@@ -53,7 +53,6 @@ app.config.update(
     SESSION_COOKIE_SAMESITE='Lax',
 )
 
-db.init_app(app)
 lm.init_app(app)
 limiter.init_app(app)
 lm.init_app(app)
