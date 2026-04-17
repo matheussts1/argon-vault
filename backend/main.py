@@ -13,6 +13,7 @@ app = Flask(__name__,
             static_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static')))
 
 database_url = os.getenv('DATABASE_URL')
+print(f"Database URL: {database_url}")
 
 if database_url:
     if database_url.startswith("postgres://"):
