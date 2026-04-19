@@ -26,7 +26,7 @@ document.querySelector("form.register").addEventListener('register', (r) => {
         const envio_dados = fetch(url + endpoint, { method: "POST", headers: { "Content-Type": "application/json"}, body: serializacao, credentials: 'include'})
         .then(response => response.json())
         .then(data => {
-            if (data === "Sucesso") {
+            if (data) {
                 window.location.href = "https://argon-vault.onrender.com/argonvault"
             } else {
                 alert ("Usuario ja existe ou houve um erro no cadastro. Tente novamente com outro nome de usuário.")
