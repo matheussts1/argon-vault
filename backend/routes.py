@@ -209,4 +209,4 @@ def logout():
     except Exception as e:
         return jsonify(f"message: {e}"), 400
     
-    return (redirect(url_for("web_site")))
+    return (redirect(url_for("main.web_site")))
