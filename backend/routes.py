@@ -204,5 +204,9 @@ def deletar():
 @main_bp.route("/logout")
 @login_required
 def logout():
-    logout_user(current_user)
+    try:
+        logout_user()
+    except Exception as e:
+        return jsonify(f"message: {e}"), 400
+    
     return (redirect(url_for("web_site")))
