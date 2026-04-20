@@ -204,5 +204,5 @@ def deletar():
 @main_bp.route("/logout")
 @login_required
 def logout():
-    logout_user()
+    logout_user(current_user)
     return (redirect(url_for("web_site")))
