@@ -43,7 +43,7 @@ def web_site():
                            content=senhas_usuario)
 
 @main_bp.route("/register", methods=["GET", "POST"])
-@limiter.limit("20 per hour")
+#@limiter.limit("20 per hour")
 def create_login():
     form = RegisterForm()
 
@@ -101,7 +101,7 @@ def get_salt_crypto():
         return jsonify({"salt": "df2ae307fff614da5649ff5ced16642f"}), 400
 
 @main_bp.route("/login", methods=["GET", "POST"])
-@limiter.limit("20 per hour")
+#@limiter.limit("20 per hour")
 def auth_login():
     form = LoginForm()
     user = None
