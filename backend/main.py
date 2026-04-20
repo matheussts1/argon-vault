@@ -48,7 +48,6 @@ app.config.update(
 
 lm.init_app(app)
 limiter.init_app(app)
-lm.init_app(app)
 lm.login_view = 'main.auth_login'
 app.register_blueprint(main_bp)
 
