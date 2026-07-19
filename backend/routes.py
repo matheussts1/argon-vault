@@ -2,7 +2,7 @@ import base64
 import models
 
 from flask import Blueprint, request, render_template, jsonify, redirect, url_for
-from extensions import db, ph, limiter, csp, lm
+from extensions import data_base, password_hasher, limiter, content_security_policy, login_manager
 from flask_login import current_user, login_user, logout_user, login_required
 from form_validation import RegisterForm, LoginForm, PasswordsForm, DeleteForm
 from sqlalchemy.exc import IntegrityError
@@ -12,12 +12,12 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.after_request
 def add_security_headers(response):
-    response.headers['Content-Security-Policy'] = csp
+    response.headers['Content-Security-Policy'] = content_security_policy
     response.headers['X-Frame-Options'] = 'DENY'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     return response
 
-@lm.user_loader
+@login_manager.user_loader
 def load_user(user_id):
     return models.Users.query.get(int(user_id))
 
@@ -31,16 +31,16 @@ def web_site():
     form_passwords = PasswordsForm()
     form_delete = DeleteForm()
 
-    senhas_usuario = []
+    user_passwords = []
 
     if current_user.is_authenticated:
-        senhas_usuario = models.Secrets.query.filter_by(user_id=current_user.id).all()
+        user_passwords = models.Secrets.query.filter_by(user_id=current_user.id).all()
     
     return render_template("main/app.html",
                            login_form=form_login,
                            add_form=form_passwords,
                            delete_form=form_delete,
-                           content=senhas_usuario)
+                           content=user_passwords)
 
 @main_bp.route("/register", methods=["GET", "POST"])
 @limiter.limit("20 per hour")
@@ -48,33 +48,33 @@ def create_login():
     form = RegisterForm()
 
     if request.method == "POST":
-        dados = request.get_json()
-        form = RegisterForm(data=dados)
+        data = request.get_json()
+        form = RegisterForm(data=data)
 
-        user = dados.get('user')
+        user = data.get('user')
 
-        hash_recebido = dados.get('password')
-        hash_bytes = bytes.fromhex(hash_recebido)
+        hash_from_front = data.get('password')
+        hash_bytes = bytes.fromhex(hash_from_front)
 
-        salt = dados.get('salt')
+        salt = data.get('salt')
         salt_bytes = base64.b64decode(salt)
 
-        if not dados:
-            return jsonify("message: Nenhum dado recebido"), 400
+        if not data:
+            return jsonify("message: No data received"), 400
 
         if form.validate_on_submit():
             try:
-                double_hash = ph.hash(hash_bytes, salt=salt_bytes)
+                double_hash = password_hasher.hash(hash_bytes, salt=salt_bytes)
                 new_user = models.Users(
                     user=user, password=double_hash, salt=salt)
-                db.session.add(new_user)
-                db.session.commit()
+                data_base.session.add(new_user)
+                data_base.session.commit()
         
-                return jsonify(message="Sucesso"), 201
+                return jsonify(message="Success"), 201
         
             except IntegrityError:
-                db.session.rollback()
-                return jsonify(message="Usuário ja existe"), 400
+                data_base.session.rollback()
+                return jsonify(message="User already exists"), 400
         else:
             return jsonify(errors=form.errors), 400
             
@@ -92,11 +92,11 @@ def get_salt():
     
 @main_bp.route('/get-salt-crypto', methods=['GET'])
 def get_salt_crypto():
-    usuario = request.args.get('usuario')
-    user = models.Users.query.filter_by(user=usuario).first()
+    user = request.args.get('usuario')
+    user_from_db = models.Users.query.filter_by(user=user).first()
     
-    if user:
-        return jsonify({"salt": user.salt}), 200
+    if user_from_db:
+        return jsonify({"salt": user_from_db.salt}), 200
     else:
         return jsonify({"salt": "df2ae307fff614da5649ff5ced16642f"}), 400
 
@@ -107,31 +107,31 @@ def auth_login():
     user = None
 
     if request.method == 'POST':
-        dados = request.get_json()
-        form = LoginForm(data=dados)
+        data = request.get_json()
+        form = LoginForm(data=data)
 
         user = models.Users.query.filter_by(user=form.usuario.data).first()
 
         if not user:
-            return jsonify("Usuario não existe"), 404
+            return jsonify("User dont exist"), 404
 
-        senha_banco = user.password
+        password_from_db = user.password
 
-        hash = dados.get('hash').strip()
+        hash = data.get('hash').strip()
         hash_bytes = bytes.fromhex(hash)
 
     if form.validate_on_submit():
         try:
-            if user and ph.verify(senha_banco, hash_bytes):
+            if user and password_hasher.verify(password_from_db, hash_bytes):
                 login_user(user)
-                return jsonify("Usuario logado!"), 200
+                return jsonify("User logged!"), 200
 
         except VerifyMismatchError:
-            return jsonify("Usuario ou senha incorretos!"), 401 
+            return jsonify("User or password incorrect!"), 401 
     else:
         return jsonify(errors=form.errors), 400
     
-    return jsonify("Não entrou em nenhum if")
+    return jsonify("It did not enter any if statement.")
 
 @main_bp.route("/passwords", methods=["GET", "POST"])
 @login_required
@@ -140,29 +140,29 @@ def passwords():
 
     if request.method == "POST":
 
-        dados = request.get_json()
-        form = PasswordsForm(data=dados)
+        data = request.get_json()
+        form = PasswordsForm(data=data)
 
-        service = dados.get('service')
-        usuario = dados.get('usuario_service')
-        senha = dados.get('password_service')
-        iv = dados.get('iv')
+        service = data.get('service')
+        usuario = data.get('usuario_service')
+        senha = data.get('password_service')
+        iv = data.get('iv')
 
-        if not dados:
-            return jsonify({"error": "Nenhum dado recebido"}), 400
+        if not data:
+            return jsonify({"error": "No data received"}), 400
             
         if form.validate_on_submit():
             try:
                 new_service = models.Secrets(service=service, user_log=usuario,
                                             encrypted_content=senha, iv_content=iv, user_id=current_user.id)
-                db.session.add(new_service)
-                db.session.commit()
+                data_base.session.add(new_service)
+                data_base.session.commit()
                 
-                id_senha = new_service.id
+                password_id = new_service.id
 
                 return jsonify({
-                    "message": "Senha salva com sucesso",
-                    "ID": id_senha
+                    "message": "Password saved successfully.",
+                    "ID": password_id
                 }), 200
 
             except Exception as e:
@@ -170,36 +170,36 @@ def passwords():
         else:
             return jsonify(errors=form.errors), 400
     
-    return jsonify("Não entrou em nada")
+    return jsonify("It didn't get involved in anything.")
 
 @main_bp.route("/delete", methods=["POST"])
 @login_required
-def deletar():
+def delete():
     form = DeleteForm()
 
     if request.method == "POST": 
 
-        dados = request.get_json()
-        form = DeleteForm(data=dados)
+        data = request.get_json()
+        form = DeleteForm(data=data)
 
-        id = dados.get("id_senha")
+        id = data.get("id_senha")
 
-        if not dados:
-            return jsonify("Nenhum dado recebido"), 400
+        if not data:
+            return jsonify("No data received"), 400
         
         if form.validate_on_submit():
             try:
-                id_apagar = db.session.get(models.Secrets, id)
-                db.session.delete(id_apagar)
-                db.session.commit()
-                return jsonify("Id deletado com sucesso!"), 200
+                id_for_delete = data_base.session.get(models.Secrets, id)
+                data_base.session.delete(id_for_delete)
+                data_base.session.commit()
+                return jsonify("ID successfully deleted!"), 200
 
             except Exception as e:
                 return jsonify(f"message: {e}")
         else: 
             return jsonify(errors=form.errors), 400
 
-    return jsonify("Não entrou em nenhum if")
+    return jsonify("It did not enter any if statement")
 
 @main_bp.route("/logout")
 @login_required

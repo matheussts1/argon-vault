@@ -4,12 +4,12 @@ from flask_login import LoginManager
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-db = SQLAlchemy()
-lm = LoginManager()
-ph = PasswordHasher(hash_len=32, time_cost=3, memory_cost=65536, parallelism=4)
+data_base = SQLAlchemy()
+login_manager = LoginManager()
+password_hasher = PasswordHasher(hash_len=32, time_cost=3, memory_cost=65536, parallelism=4)
 limiter = Limiter(key_func=get_remote_address)
 
-csp = (
+content_security_policy = (
     "default-src 'self'; "
     "style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net; "
     "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; "

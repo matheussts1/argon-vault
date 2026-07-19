@@ -1,11 +1,11 @@
 import os
 import sys
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(BASE_DIR)
+BASE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(BASE_DIRECTORY)
 
 from flask import Flask
-from extensions import db, lm, limiter 
+from extensions import data_base, login_manager, limiter 
 
 app = Flask(__name__, 
             template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')),
@@ -30,10 +30,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 from routes import main_bp 
 
 try:
-    db.init_app(app)
+    data_base.init_app(app)
     
     with app.app_context():
-        db.create_all()
+        data_base.create_all()
 except Exception as e:
     import traceback
     traceback.print_exc()
@@ -46,9 +46,9 @@ app.config.update(
     SESSION_COOKIE_SAMESITE='Lax',
 )
 
-lm.init_app(app)
+login_manager.init_app(app)
 limiter.init_app(app)
-lm.login_view = 'main.auth_login'
+login_manager.login_view = 'main.auth_login'
 app.register_blueprint(main_bp)
 
 from .routes import *
