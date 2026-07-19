@@ -110,7 +110,7 @@ def auth_login():
         data = request.get_json()
         form = LoginForm(data=data)
 
-        user = models.Users.query.filter_by(user=form.usuario.data).first()
+        user = models.Users.query.filter_by(user=form.user.data).first()
 
         if not user:
             return jsonify("User dont exist"), 404
