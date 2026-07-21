@@ -2,7 +2,7 @@ import os
 import traceback
 
 from flask import Flask
-from extensions import data_base, login_manager, limiter 
+from backend.extensions import data_base, login_manager, limiter
 
 app = Flask(__name__, 
             template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')),
