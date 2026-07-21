@@ -3,9 +3,6 @@ import os
 
 from main import app
 
-BASE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(BASE_DIRECTORY)
-
 database_url = os.getenv('DATABASE_URL')
 
 if database_url:

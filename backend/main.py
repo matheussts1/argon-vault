@@ -1,8 +1,12 @@
 import os
 import traceback
+import sys
+
+BASE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(BASE_DIRECTORY)
 
 from flask import Flask
-from backend.extensions import data_base, login_manager, limiter
+from extensions import data_base, login_manager, limiter
 
 app = Flask(__name__, 
             template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')),
@@ -31,7 +35,7 @@ limiter.init_app(app)
 login_manager.login_view = 'main.auth_login'
 app.register_blueprint(main_bp)
 
-from backend.routes import *
+from routes import *
 
 if __name__ == "__main__":
     app.run()
