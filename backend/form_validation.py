@@ -15,7 +15,7 @@ class LoginForm(FlaskForm):
 
 class PasswordsForm(FlaskForm):
     service = StringField('Serviço', validators=[DataRequired()])
-    service_user = StringField('Usuario', validators=[DataRequired()])
+    usuario_service = StringField('Usuario', validators=[DataRequired()])
     password_service = PasswordField('Senha', validators=[InputRequired()])
     submit = SubmitField('Adicionar')
 
