@@ -2,26 +2,33 @@ import os
 import traceback
 import sys
 
-BASE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(BASE_DIRECTORY)
+MAIN_FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(MAIN_FILE_DIR)
 
 from flask import Flask
 from extensions import data_base, login_manager, limiter
+from data_base_config import database_path, connection_to_url, local_db_connection
 
 app = Flask(__name__, 
             template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')),
             static_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static')))
 
+if database_path:
+   app.config['SQLALCHEMY_DATABASE_URI'] = connection_to_url(database_path)
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = local_db_connection()
+
 from routes import main_bp 
 
 try:
     data_base.init_app(app)
-
     with app.app_context():
         data_base.create_all()
+
 except Exception as e:
     traceback.print_exc()
 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 app.config.update(

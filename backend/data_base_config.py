@@ -1,20 +1,19 @@
-import sys
 import os
 
-from main import app
+database_path = os.getenv('DATABASE_URL')
 
-database_url = os.getenv('DATABASE_URL')
+def connection_to_url(db):
+    if db:
+        if db.startswith("postgres://"):
+            db = db.replace("postgres://", "postgresql://", 1)
 
-if database_url:
-    if database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-else:
+        return db
+
+def local_db_connection():
     bdbase = os.path.abspath(os.path.dirname(__file__))
     instance_path = os.path.join(bdbase, 'instance')
+
     if not os.path.exists(instance_path):
         os.makedirs(instance_path)
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'user.db')
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    return 'sqlite:///' + os.path.join(instance_path, 'user.db')
