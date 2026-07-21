@@ -20,4 +20,4 @@ class PasswordsForm(FlaskForm):
     submit = SubmitField('Adicionar')
 
 class DeleteForm(FlaskForm):
-    password_id = HiddenField('ID')
+    id_senha = HiddenField('ID')
