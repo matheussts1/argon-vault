@@ -31,7 +31,7 @@ limiter.init_app(app)
 login_manager.login_view = 'main.auth_login'
 app.register_blueprint(main_bp)
 
-from .routes import *
+from backend.routes import *
 
 if __name__ == "__main__":
     app.run()
