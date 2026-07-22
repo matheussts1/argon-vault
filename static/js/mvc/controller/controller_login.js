@@ -35,7 +35,7 @@ form_login.addEventListener('login', (l) => {
 
            const envio = fetch(url + endpoint, { method: "POST", headers: { "Content-Type": "application/json"}, body: serialization, credentials: 'include'})
             .then(response => response.json())
-            .then(data => { if (data === 'Usuario logado!') {
+            .then(data => { if (data === 'User logged!') {
 
                 document.getElementById("section-login").style.display = 'none';
                 document.getElementById("section-passwords").style.display = 'block';
