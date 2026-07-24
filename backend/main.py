@@ -8,7 +8,7 @@ sys.path.append(MAIN_FILE_DIR)
 from flask import Flask
 from routes import main_bp
 from extensions import data_base, login_manager, limiter
-from data_base_config import database_path, connection_to_url, local_db_connection
+from backend.configs.data_base_config import database_path, connection_to_url, local_db_connection
 
 app = Flask(__name__, 
             template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')),
