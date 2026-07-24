@@ -255,7 +255,7 @@ container.addEventListener("click", (l) => {
         const envio_delete = fetch(url + endpoint, {method: "POST", headers: { "Content-Type": "application/json"}, body: id_json, credentials: 'include'})
         .then(response => response.json())
         .then(data =>  {
-            if (data === "Id deletado com sucesso!") {
+            if (data === "ID successfully deleted!") {
                 document.querySelector("div.password-card").remove()
             } else {
                 console.log("Algo deu errado no delete")
