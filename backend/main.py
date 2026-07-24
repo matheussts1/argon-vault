@@ -21,17 +21,17 @@ else:
 from routes import main_bp 
 
 try:
+    login_manager.init_app(app)
+    limiter.init_app(app)
     data_base.init_app(app)
+    
     with app.app_context():
         data_base.create_all()
-
 except Exception as e:
     traceback.print_exc()
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
-login_manager.init_app(app)
-limiter.init_app(app)
 login_manager.login_view = 'main.auth_login'
 app.register_blueprint(main_bp)
 
